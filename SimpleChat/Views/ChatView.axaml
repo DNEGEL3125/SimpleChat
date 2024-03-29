@@ -1,0 +1,108 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SimpleChat.ViewModels"
+             xmlns:dataModel="clr-namespace:SimpleChat.Models"
+             xmlns:cvt="clr-namespace:SimpleChat.Converters"
+             xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SimpleChat.Views.ChatView"
+             x:DataType="vm:ChatViewModel">
+    <UserControl.DataContext>
+        <vm:ChatViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <cvt:ChatMessageIsSelfAlignmentConverter
+            x:Key="ChatMessageIsSelfAlignmentConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="30,*,Auto">
+        <Grid ColumnDefinitions="Auto,*">
+            <!-- Back button -->
+            <Button Command="{Binding BackCommand}">《</Button>
+            <!-- Chat title -->
+            <TextBlock Text="{Binding Title}" Grid.Column="1"
+                       HorizontalAlignment="Center" VerticalAlignment="Center">
+            </TextBlock>
+        </Grid>
+
+        <!-- Bubble Tip Control -->
+        <Border Grid.Row="1" x:Name="BubbleTip" Background="LightYellow" CornerRadius="5" ZIndex="50"
+                BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Opacity="{Binding BubbleTipOpacity}">
+            <TextBlock Text="{Binding BubbleTipText}" Padding="5" Foreground="black" />
+        </Border>
+
+        <!-- ChatMessage display area-->
+        <ScrollViewer Name="MessagesScrollViewer" Grid.Row="1"
+                      ScrollChanged="MessagesScrollViewer_OnScrollChanged"
+                      Initialized="MessagesScrollViewer_OnInitialized">
+            <!-- Traverse the ListMessage -->
+            <ItemsControl ItemsSource="{Binding   ListMessages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="dataModel:ChatMessage">
+                        <StackPanel>
+                            <!-- Display send time -->
+                            <TextBlock Text="{Binding SendDateTime}"
+                                       HorizontalAlignment="Center" Foreground="gray">
+                            </TextBlock>
+
+                            <!-- Display Username -->
+                            <TextBlock Margin="10" Text="{Binding Sender.Username}">
+                                <TextBlock.HorizontalAlignment>
+                                    <Binding RelativeSource="{RelativeSource Self}"
+                                             Converter="{StaticResource ChatMessageIsSelfAlignmentConverter}" />
+                                </TextBlock.HorizontalAlignment>
+                            </TextBlock>
+
+
+                            <!-- Display the content -->
+                            <Border Background="{DynamicResource MsgColor}" CornerRadius="10" Padding="10" Margin="10">
+                                <md:MarkdownScrollViewer Markdown="{Binding Content}">
+                                    <md:MarkdownScrollViewer.HorizontalAlignment>
+                                        <Binding RelativeSource="{RelativeSource Self}"
+                                                 Converter="{StaticResource ChatMessageIsSelfAlignmentConverter}">
+                                        </Binding>
+                                    </md:MarkdownScrollViewer.HorizontalAlignment>
+                                </md:MarkdownScrollViewer>
+                                <!-- <TextBlock Text="{Binding Content}" TextWrapping="Wrap"> -->
+                                <!--     <TextBlock.HorizontalAlignment> -->
+                                <!--         <Binding RelativeSource="{RelativeSource Self}" -->
+                                <!--                  Converter="{StaticResource ChatMessageIsSelfAlignmentConverter}"> -->
+                                <!--         </Binding> -->
+                                <!--     </TextBlock.HorizontalAlignment> -->
+                                <!-- </TextBlock> -->
+                            </Border>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- MessageInput and SendButton -->
+        <Grid Grid.Row="2" Margin="10" ColumnDefinitions="*,Auto,Auto">
+            <!-- MessageInput -->
+            <TextBox x:Name="MessageInput" Grid.Column="0" MaxHeight="175"
+                     Margin="0,0,10,0" VerticalAlignment="Center"
+                     Watermark="Type your message here..." TextWrapping="Wrap"
+                     MaxLength="16384" TextChanging="OnTextChanging"
+                     Text="{Binding MessageInput}"
+                     CaretIndex="{Binding MessageInputIndex, Mode=TwoWay}">
+                <TextBox.KeyBindings>
+                    <!-- Press enter to send message -->
+                    <KeyBinding Gesture="Enter" Command="{Binding SendCommand}" />
+                    <!-- Press Shift+Enter to insert a new line -->
+                    <KeyBinding Gesture="Shift+Enter" Command="{Binding InsertNewLineCommand}" />
+                </TextBox.KeyBindings>
+
+            </TextBox>
+
+            <!-- SendButton -->
+            <Button Content="Send" Grid.Column="1" Command="{Binding SendCommand}" />
+
+            <!-- More file format button -->
+            <Button Grid.Column="2" Content="+" Command="{Binding MoreFileFormatCommand}"></Button>
+        </Grid>
+    </Grid>
+</UserControl>

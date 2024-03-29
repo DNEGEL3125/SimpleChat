@@ -1,0 +1,7 @@
+{
+  "Smtp": {
+    "Host": "smtp.xxx.com",
+    "Password": "Your password",
+    "EmailFrom": "example@???.com"
+  }
+}

@@ -1,0 +1,47 @@
+<!-- ChatListView.axaml -->
+<!-- This is used to display all chats of a user -->
+<!-- User can go to a ChatView after click on one chat -->
+
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SimpleChat.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SimpleChat.Views.ChatListView"
+             x:DataType="vm:ChatListViewModel">
+
+    <UserControl.DataContext>
+        <vm:ChatListViewModel />
+    </UserControl.DataContext>
+
+
+    <StackPanel>
+        <Menu HorizontalAlignment="Right">
+            <MenuItem Header="➕" FontSize="20" VerticalAlignment="Center" Padding="5 ">
+                <MenuItem Header="Add Friend/Group Chat" Command="{Binding ShowAddFriendWindowCommand}">
+
+                </MenuItem>
+                <MenuItem Header="Create group chat" Command="{Binding ShowCreateGroupChatWindowCommand}"></MenuItem>
+            </MenuItem>
+        </Menu>
+
+
+        <ItemsControl ItemsSource="{Binding ChatList}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <!-- Click a button to choose a chat -->
+                    <Button Content="{Binding Title}" HorizontalAlignment="Stretch"
+                            x:CompileBindings="False" CommandParameter="{Binding}">
+                        <Button.Command>
+                            <!-- Use ChatListViewModel.ShowChatViewCommand -->
+                            <Binding Path="DataContext.ShowChatViewCommand"
+                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}" />
+                        </Button.Command>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+
+</UserControl>

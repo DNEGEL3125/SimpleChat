@@ -1,0 +1,32 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="SimpleChat.App"
+             xmlns:local="using:SimpleChat"
+             xmlns:views="clr-namespace:SimpleChat.Views"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <!-- 暗色主题 -->
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="MsgColor" Color="#3B3B3B" />
+                </ResourceDictionary>
+                <!-- 亮色主题 -->
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="MsgColor" Color="LightGray" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+</Application>

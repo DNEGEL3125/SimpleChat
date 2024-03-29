@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:SimpleChat.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+        x:Class="SimpleChat.Views.AddFriendWindowView"
+        x:DataType="vm:AddFriendWindowViewModel"
+        Title="Search for users and group chats">
+    <Window.DataContext>
+        <vm:AddFriendWindowViewModel />
+    </Window.DataContext>
+
+    <StackPanel>
+        <TextBox Name="SearchFriendInput" Watermark="Keyword" Text="{Binding SearchKeyword}"></TextBox>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <ToggleButton Content="Search for users" HorizontalAlignment="Stretch" Margin="20"
+                          IsChecked="{Binding ShouldSearchFriend}">
+            </ToggleButton>
+            <ToggleButton Content="Search for group chats" HorizontalAlignment="Stretch" Margin="20"
+                          IsChecked="{Binding ShouldSearchGroupChat}">
+            </ToggleButton>
+        </StackPanel>
+
+        <ItemsControl ItemsSource="{Binding MatchingUsers}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="purple" BorderThickness="1">
+                        <DockPanel>
+                            <TextBlock Text="{Binding Username}" HorizontalAlignment="Stretch"
+                                       x:CompileBindings="False">
+                            </TextBlock>
+                            <Button Content="+" CommandParameter="{Binding}" x:CompileBindings="False"
+                                    HorizontalAlignment="Right">
+                                <Button.Command>
+                                    <!-- Use ChatListViewModel.ShowChatViewCommand -->
+                                    <Binding Path="DataContext.AddFriendCommand"
+                                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}" />
+                                </Button.Command>
+                            </Button>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <ItemsControl ItemsSource="{Binding MatchingChats}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="green" BorderThickness="1">
+                        <DockPanel>
+                            <TextBlock Text="{Binding Title}" HorizontalAlignment="Stretch"
+                                       x:CompileBindings="False">
+                            </TextBlock>
+                            <Button Content="+" CommandParameter="{Binding}" x:CompileBindings="False"
+                                    HorizontalAlignment="Right">
+                                <Button.Command>
+                                    <!-- Use ChatListViewModel.ShowChatViewCommand -->
+                                    <Binding Path="DataContext.AddChatCommand"
+                                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}" />
+                                </Button.Command>
+                            </Button>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+
+</Window>
